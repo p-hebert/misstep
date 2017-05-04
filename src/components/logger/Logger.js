@@ -1,4 +1,7 @@
+import Ajv from 'ajv';
+import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
 import MisstepError from '../errors/MisstepError';
+import optschema from './options.ajv.json';
 
 const LEVELS = {
   NPM: {
@@ -11,14 +14,27 @@ const LEVELS = {
   }
 };
 
+const logger = {
+  error: () => console.error.apply(console, arguments),
+  warn: () => console.warn.apply(console, arguments),
+  info: () => console.log.apply(console, arguments),
+  verbose: () => console.log.apply(console, arguments),
+  debug: () => console.debug.apply(console, arguments),
+  silly: () => console.trace.apply(console, arguments)
+};
+
 class Logger {
-  construct(options = { logger: console }) {
+  construct(options = { logger: logger }) {
     if(typeof options === 'object' && options && options.skip_validate){
-      this.logger = options.logger;
-      this.logger.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
-    }else if(Logger.validateOptions(options)){
-      this.logger = options.logger;
+      console.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
+    }else{
+      let ajv = new Ajv();
+      ajv_instanceof(ajv);
+      if(!ajv.validate(optschema, options)){
+        throw new MisstepError('MisstepError: Misstep.Logger options did not pass validation. See payload for more information', ajv.errors);
+      }
     }
+    // TODO: Do all the business logic stuff here
   }
 
   error() {
@@ -34,50 +50,22 @@ class Logger {
   }
 
   info() {
-    return this.logger.info.apply(this.logger, arguments);
+    return this.logger.log.apply(this.logger, arguments);
+  }
+
+  verbose() {
+    return this.logger.verbose.apply(this.logger, arguments);
   }
 
   debug() {
     return this.logger.debug.apply(this.logger, arguments);
   }
 
-  static validateOptions(options){
-    let options_is_object = typeof options === 'object' && options;
-    let logger_is_object = options_is_object && typeof options.logger === 'object' && options.logger;
-    let logger_has_functions = !options_is_object || !logger_is_object ||
-                               Object.keys(LEVELS.NPM).map(k => k.toLowerCase()).reduce((acc, k) => {
-                                 if(!(typeof options.logger[k] === 'function')){
-                                   acc.push(k);
-                                 }
-                                 return acc;
-                               }, []);
-    if(Array.isArray(logger_has_functions) && !logger_has_functions.length){
-      return true;
-    }else if(Array.isArray(logger_has_functions) && logger_has_functions.length){
-      let dataPath = logger_has_functions.map(k => `.logger.${k}`);
-      dataPath = dataPath.length > 1 ? dataPath : dataPath[0];
-      let schemaPath = logger_has_functions.map(k => `/logger/${k}`);
-      schemaPath = schemaPath.length > 1 ? schemaPath : schemaPath[0];
-      throw new MisstepError('MisstepError: Logger options did not pass validation. See payload for more information', {
-        keyword: logger_has_functions.length === 1 ? logger_has_functions[0] : logger_has_functions,
-        dataPath: dataPath,
-        schemaPath: schemaPath,
-        params: {
-          type: 'function'
-        }
-      });
-    }else{
-      throw new MisstepError('MisstepError: Logger options did not pass validation. See payload for more information', {
-        keyword: options_is_object ? '' : 'logger',
-        dataPath: options_is_object ? '' : '.logger',
-        schemaPath: options_is_object ? '/' : '/logger',
-        params: {
-          type: 'object',
-          required: options_is_object ? undefined : true
-        }
-      });
-    }
+  silly() {
+    return this.logger.silly.apply(this.logger, arguments);
   }
 }
 
-Logger.LEVELS = LEVELS;
+Logger.LEVELS = LEVELS.NPM;
+
+export default Logger;

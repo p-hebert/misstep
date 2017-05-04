@@ -1,0 +1,31 @@
+{
+  "required": ["builder"],
+  "properties": {
+    "builder": {
+      "required": ["types"],
+      "properties": {
+        "skip_validate": { "type": "boolean" },
+        "types": [
+          { "typeof": "object" }
+        ]
+      }
+    },
+    "catcher": {
+      "properties": {
+        "skip_validate": { "type": "boolean" },
+        "catchers": [
+          { "typeof": "object" }
+        ]
+      }
+    },
+    "log": {
+      "required": ["logger"],
+      "properties": {
+        "skip_validate": { "type": "boolean" },
+        "logger": {
+          "typeof": "object"
+        }
+      }
+    }
+  }
+}

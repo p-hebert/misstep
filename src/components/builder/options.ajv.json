@@ -1,0 +1,40 @@
+{
+  "required": ["types", "logger"],
+  "properties": {
+    "skip_validate": { "type": "boolean" },
+    "logger": {
+      "instanceof": "Logger"
+    },
+    "types": {
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "required": ["category", "constructor"],
+            "properties": {
+              "key": { "type": "string" },
+              "constructor": {
+                "instanceof": ["Function", "ExtendableError"],
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          },
+          {
+            "required": ["category", "callback"],
+            "properties": {
+              "key": { "type": "string" },
+              "callback": {
+                "instanceof": "Function"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+
+}

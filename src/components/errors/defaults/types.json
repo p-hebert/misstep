@@ -1,5 +1,0 @@
-{
-  "EXTENDABLE": "ExtendableError",
-  "MISSTEP": "MisstepError",
-  "RESPONSE": "ResponseError"
-}

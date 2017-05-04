@@ -1,8 +1,26 @@
+import Ajv from 'ajv';
+import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
+import Logger from './Logger';
+import MisstepError from '../errors/MisstepError';
+import ExtendableError from '../errors/ExtendableError';
+import optschema from './options.ajv.json';
 import default_error_types from '../errors/defaults/types.json';
 import default_error_enum from '../errors/defaults/enum.json';
 
 class Builder {
   constructor(options){
+    if(typeof options === 'object' && options && options.skip_validate){
+      console.warn('MisstepWarning: Overriding Misstep.Builder constructor options validation is not advised. It could result in runtime errors being thrown');
+    }else{
+      let ajv = new Ajv();
+      ajv_instanceof(ajv);
+      ajv_instanceof.definition.CONSTRUCTORS.Logger = Logger;
+      ajv_instanceof.definition.CONSTRUCTORS.ExtendableError = ExtendableError;
+      if(!ajv.validate(optschema, options)){
+        throw new MisstepError('MisstepError: Misstep.Builder options did not pass validation. See payload for more information', ajv.errors);
+      }
+    }
+    // TODO: Do all the business logic stuff here
   }
 
   get errorTypes() {
