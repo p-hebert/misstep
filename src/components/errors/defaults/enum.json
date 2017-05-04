@@ -1,0 +1,65 @@
+[
+  {
+    "name": "EXTENDABLE",
+    "description": "Extendable errors",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "Default errors for the ExtendableError type",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "This is the default error for the Misstep library. This error does not provide any useful information to the user and should only be used for testing purposes.",
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "MISSTEP",
+    "description": "Misstep internal errors",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "Default errors for the MisstepError type",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "Misstep has encountered an unknown error. See payload for more information",
+          }
+        ]
+      },
+      {
+        "name": "VALIDATION",
+        "description": "Validation errors for the MisstepError type",
+        "status": "inherit",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "Misstep has encountered a validation error. See payload for more information",
+            "status": "inherit"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "RESPONSE",
+    "description": "Response errors",
+    "status": 500,
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "status": "inherit",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "This error is a fatal error that has not been categorized. See payload for more information",
+            "status": "inherit"
+          }
+        ]
+      }
+    ]
+  }
+]
