@@ -12,9 +12,10 @@ const LEVELS = {
 };
 
 class Logger {
-  construct(options) {
+  construct(options = { logger: console }) {
     if(typeof options === 'object' && options && options.skip_validate){
-      console.warn('MisstepWarning');
+      this.logger = options.logger;
+      this.logger.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
     }else if(Logger.validateOptions(options)){
       this.logger = options.logger;
     }
