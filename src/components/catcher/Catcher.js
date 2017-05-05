@@ -11,7 +11,7 @@ class Catcher {
   constructor(options) {
     // Validation
     if(typeof options === 'object' && options && options.skip_validate){
-      console.warn('MisstepWarning: Overriding Misstep.Catcher constructor options validation is not advised. It could result in runtime errors being thrown');
+      options.logger.warn('MisstepWarning: Overriding Misstep.Catcher constructor options validation is not advised. It could result in runtime errors being thrown');
     }else{
       let ajv = new Ajv();
       ajv_instanceof(ajv);

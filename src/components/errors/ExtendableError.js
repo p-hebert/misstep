@@ -4,9 +4,9 @@ class ExtendableError extends Error {
     this.name = this.constructor.name;
     this.message = message;
     this.payload = payload || null;
-    if (typeof Error.captureStackTrace === 'function') {
+    if(typeof Error.captureStackTrace === 'function'){
       Error.captureStackTrace(this, this.constructor);
-    } else {
+    }else{
       this.stack = (new Error(message)).stack;
     }
   }

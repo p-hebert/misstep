@@ -68,4 +68,5 @@ class Logger {
 
 Logger.LEVELS = LEVELS.NPM;
 
+export logger;
 export default Logger;
