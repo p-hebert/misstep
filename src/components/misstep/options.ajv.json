@@ -1,11 +1,15 @@
 {
   "required": ["builder"],
   "properties": {
+    "skip_validate": { "type": "boolean" },
     "builder": {
-      "required": ["types"],
+      "required": ["types", "enum"],
       "properties": {
         "skip_validate": { "type": "boolean" },
         "types": [
+          { "typeof": "object" }
+        ],
+        "enum": [
           { "typeof": "object" }
         ]
       }
