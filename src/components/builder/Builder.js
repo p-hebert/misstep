@@ -4,13 +4,16 @@ import Logger from './Logger';
 import MisstepError from '../errors/MisstepError';
 import ExtendableError from '../errors/ExtendableError';
 import optschema from './options.ajv.json';
-import default_error_types from '../errors/defaults/types.json';
-import default_error_enum from '../errors/defaults/enum.json';
+import default_errors from '../errors/defaults/errors.js';
+import default_enum from '../errors/defaults/enum.json';
+
+let private_store = new WeakMap();
 
 class Builder {
   constructor(options){
+    // Validation
     if(typeof options === 'object' && options && options.skip_validate){
-      console.warn('MisstepWarning: Overriding Misstep.Builder constructor options validation is not advised. It could result in runtime errors being thrown');
+      options.logger.warn('MisstepWarning: Overriding Misstep.Builder constructor options validation is not advised. It could result in runtime errors being thrown');
     }else{
       let ajv = new Ajv();
       ajv_instanceof(ajv);
@@ -20,24 +23,41 @@ class Builder {
         throw new MisstepError('MisstepError: Misstep.Builder options did not pass validation. See payload for more information', ajv.errors);
       }
     }
-    // TODO: Do all the business logic stuff here
+
+    //
+    let default_constructors = options.types.reduce((acc, t) => {
+     acc.constructors[t.key] = t.constructor;
+     return acc;
+   }, {constructors: {}, callbacks: {}});
+    let option_constructors = options.types.reduce((acc, t) => {
+      if(t.constructor){
+        acc.constructor[t.key] = t.constructor;
+        return acc;
+      }else{
+        acc.callbacks[t.key] = t.callbacks;
+        return acc;
+      }
+    }, default_constructors);
+
+    let store = {
+      enum: [...default_enum, ...options.enum],
+      logger: options.logger,
+      types: {
+        names: [...default_errors.map(t => t.key), ...options.types.map(t => t.key)],
+        constructors: option_constructors
+      }
+    };
+    private_store.set(this, store);
   }
 
-  get errorTypes() {
-    return Builder.error_types;
-  }
-
-  set errorTypes(types) {
-    Builder.error_types = { ...Builder.error_types, types };
-  }
-
-  static build(error) {
+  static construct(error) {
     let type;
     if(typeof error.type === "string"){
       type = Builder.parseErrorType(error.type);
     }else{
       type = { valid: false };
     }
+    let Callback = Builder.getErrorCallback(type);
     let Constructor = Builder.getErrorConstructor(type);
     if(type.valid){
       error.status = error.status || type.detailed.status;
@@ -57,15 +77,28 @@ class Builder {
         error.message = error.message || type.subcategory.description;
       }
     }
-    return new Constructor(error);
+
+    if(Callback) {
+      return Callback(error);
+    }else{
+      return new Constructor(error);
+    }
   }
 
   static getErrorConstructor(type) {
     let category = !type.category || type.category.name;
-    let detailed = !type.detailed || type.detailed.name;
-    let constructor;
+    let store = private_store.get(this);
 
-    return constructor;
+    if(store.types.names.indexOf(type) !== -1){
+      return store.types.constructors[type] || store.types.callbacks[type];
+    }else{
+      return ExtendableError;
+    }
+  }
+
+  static getErrorCallback(type) {
+    let category = !type.category || type.category.name;
+    return private_store.get(this).types.callbacks[type];
   }
 
   static parseErrorType(str) {
@@ -99,7 +132,5 @@ class Builder {
     return type;
   }
 }
-
-Builder.error_types = { ... default_error_types };
 
 export Builder;
