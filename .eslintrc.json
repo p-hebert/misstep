@@ -19,6 +19,7 @@
         "before": false,
         "after": false,
         "overrides": {
+          "case": {"after": true},
           "from": {"after": true, "before": true},
           "function": {"after": true, "before": true},
           "import": {"after": true},
