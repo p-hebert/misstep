@@ -20,6 +20,7 @@
         "after": false,
         "overrides": {
           "case": {"after": true},
+          "export": {"after": true},
           "from": {"after": true, "before": true},
           "function": {"after": true, "before": true},
           "import": {"after": true},

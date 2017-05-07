@@ -26,9 +26,9 @@ class Builder {
 
     //
     let default_constructors = options.types.reduce((acc, t) => {
-     acc.constructors[t.key] = t.constructor;
-     return acc;
-   }, {constructors: {}, callbacks: {}});
+      acc.constructors[t.key] = t.constructor;
+      return acc;
+    }, {constructors: {}, callbacks: {}});
     let option_constructors = options.types.reduce((acc, t) => {
       if(t.constructor){
         acc.constructor[t.key] = t.constructor;
@@ -52,7 +52,7 @@ class Builder {
 
   static construct(error) {
     let type;
-    if(typeof error.type === "string"){
+    if(typeof error.type === 'string'){
       type = Builder.parseErrorType(error.type);
     }else{
       type = { valid: false };
@@ -72,7 +72,7 @@ class Builder {
         }
       }
       if(type.subcategory){
-        error.type += ":" + type.subcategory.name;
+        error.type += ':' + type.subcategory.name;
         error.status = error.status || type.subcategory.status;
         error.message = error.message || type.subcategory.description;
       }
@@ -89,8 +89,8 @@ class Builder {
     let category = !type.category || type.category.name;
     let store = private_store.get(this);
 
-    if(store.types.names.indexOf(type) !== -1){
-      return store.types.constructors[type] || store.types.callbacks[type];
+    if(store.types.names.indexOf(category) !== -1){
+      return store.types.constructors[category];
     }else{
       return ExtendableError;
     }
@@ -98,34 +98,36 @@ class Builder {
 
   static getErrorCallback(type) {
     let category = !type.category || type.category.name;
-    return private_store.get(this).types.callbacks[type];
+    return private_store.get(this).types.callbacks[category];
   }
 
   static parseErrorType(str) {
     let arr = str.split(':');
     let type = { valid: false };
-    type.category = ErrorEnum.find((c) => { return c.name === arr[0]; });
+    let store = private_store.get(this);
+    let error_enum = store.enum;
+    type.category = error_enum.find((c) => { return c.name === arr[0]; });
     if(arr.length > 1 && type.category){
       type.subcategory = type.category.children.find((c) => { return c.name === arr[1]; });
       type.category = {
         name: type.category.name,
         status: type.category.status,
-        description: type.category.description,
+        description: type.category.description
       };
     }
     if(arr.length > 2 && type.subcategory){
       type.detailed = type.subcategory.children.find((c) => { return c.name === arr[2]; });
       type.subcategory = {
         name: type.subcategory.name,
-        status: type.subcategory.status === "inherit" ? type.category.status : type.subcategory.status,
-        description: type.subcategory.description,
+        status: type.subcategory.status === 'inherit' ? type.category.status : type.subcategory.status,
+        description: type.subcategory.description
       };
     }
     if(type.detailed){
       type.detailed = {
         name: type.detailed.name,
-        status: type.detailed.status === "inherit" ? type.subcategory.status : type.detailed.status,
-        description: type.detailed.description,
+        status: type.detailed.status === 'inherit' ? type.subcategory.status : type.detailed.status,
+        description: type.detailed.description
       };
       type.valid = true;
     }
@@ -133,4 +135,4 @@ class Builder {
   }
 }
 
-export Builder;
+export default Builder;

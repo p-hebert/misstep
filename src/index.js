@@ -5,14 +5,8 @@ import { Logger, logger } from './components/logger/Logger';
 import ExtendableError from './components/errors/ExtendableError';
 import ResponseError from './components/errors/ResponseError';
 
-const ErrorBuilder = Builder;
-const ErrorCatcher = Catcher;
-const default_logger = logger;
-
-export default_logger;
-export Logger;
-export ErrorBuilder;
-export ErrorCatcher;
-export ExtendableError;
-export ResponseError;
+export const default_logger = logger;
+export const ErrorBuilder = Builder;
+export const ErrorCatcher = Catcher;
+export { Logger, ExtendableError, ResponseError };
 export default Misstep;
