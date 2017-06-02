@@ -71,6 +71,12 @@ describe('Logger', function() {
       });
     }
 
+    afterEach(function() {
+      sandbox.restore();
+    });
+  });
+
+  describe('logging methods', function() {
     it('should call each of the log methods with the proper arguments', function(done) {
       const logger = {
         error: () => {},
@@ -112,10 +118,6 @@ describe('Logger', function() {
       sinon.assert.calledOnce(loggerStub.silly);
       sinon.assert.calledWith(loggerStub.silly, 'silly', 'silly');
       done();
-    });
-
-    afterEach(function() {
-      sandbox.restore();
     });
   });
 
