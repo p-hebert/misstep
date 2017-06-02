@@ -15,18 +15,18 @@ const LEVELS = {
 };
 
 const logger = {
-  error: () => console.error.apply(console, arguments),
-  warn: () => console.warn.apply(console, arguments),
-  info: () => console.log.apply(console, arguments),
-  verbose: () => console.log.apply(console, arguments),
-  debug: () => console.debug.apply(console, arguments),
-  silly: () => console.trace.apply(console, arguments)
+  error: function() { console.error.apply(console, arguments); },
+  warn: function() { console.warn.apply(console, arguments); },
+  info: function() { console.log.apply(console, arguments); },
+  verbose: function() { console.log.apply(console, arguments); },
+  debug: function() { console.debug.apply(console, arguments); },
+  silly: function() { console.trace.apply(console, arguments); }
 };
 
 class Logger {
-  construct(options = { logger: logger }) {
-    if(typeof options === 'object' && options && options.skip_validate){
-      console.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
+  constructor(options = { logger }) {
+    if(typeof options === 'object' && options.skip_validate){
+      options.logger.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
     }else{
       let ajv = new Ajv();
       ajv_instanceof(ajv);
@@ -34,7 +34,7 @@ class Logger {
         throw new MisstepError('MisstepError: Misstep.Logger options did not pass validation. See payload for more information', ajv.errors);
       }
     }
-    // TODO: Do all the business logic stuff here
+    this.logger = options.logger;
   }
 
   error() {
@@ -46,11 +46,11 @@ class Logger {
   }
 
   log() {
-    return this.logger.log.apply(this.logger, arguments);
+    return this.logger.info.apply(this.logger, arguments);
   }
 
   info() {
-    return this.logger.log.apply(this.logger, arguments);
+    return this.logger.info.apply(this.logger, arguments);
   }
 
   verbose() {

@@ -7,6 +7,9 @@ const tests = {
   },
   'errors/response': {
     'path': './components/errors/ResponseError.js'
+  },
+  'logger': {
+    'path': './components/logger/Logger.js'
   }
 };
 

@@ -1,16 +1,15 @@
 {
   "required": ["logger"],
   "properties": {
-    "skip_validate": { "type": "boolean" },
     "logger": {
-      "required": ["error", "warn", "log", "info", "debug"],
+      "required": ["error", "warn", "info", "verbose", "debug", "silly"],
       "properties": {
         "error": { "instanceof": "Function" },
         "warn": { "instanceof": "Function" },
         "info": { "instanceof": "Function" },
         "verbose": { "instanceof": "Function" },
         "debug": { "instanceof": "Function" },
-        "silly": { "instanceof": "Function" },
+        "silly": { "instanceof": "Function" }
       }
     }
   }
