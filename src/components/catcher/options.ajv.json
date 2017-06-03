@@ -1,7 +1,6 @@
 {
   "required": ["logger"],
   "properties": {
-    "skip_validate": { "type": "boolean" },
     "logger": {
       "instanceof": "Logger"
     },

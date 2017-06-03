@@ -31,7 +31,7 @@ class Logger {
       let ajv = new Ajv();
       ajv_instanceof(ajv);
       if(!ajv.validate(optschema, options)){
-        throw new MisstepError('MisstepError: Misstep.Logger options did not pass validation. See payload for more information', ajv.errors);
+        throw new MisstepError('Misstep.Logger options did not pass validation. See payload for more information', ajv.errors);
       }
     }
     this.logger = options.logger;

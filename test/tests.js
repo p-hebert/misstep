@@ -1,4 +1,7 @@
 const tests = {
+  'catcher': {
+    'path': './components/catcher/Catcher.js'
+  },
   'errors/extendable': {
     'path': './components/errors/ExtendableError.js'
   },

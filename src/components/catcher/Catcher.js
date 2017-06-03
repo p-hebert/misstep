@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
-import Logger from './Logger';
+import Logger from '../logger/Logger';
 import MisstepError from '../errors/MisstepError';
 import ResponseError from '../errors/ResponseError';
 import optschema from './options.ajv.json';
@@ -10,8 +10,10 @@ let private_store = new WeakMap();
 class Catcher {
   constructor(options) {
     // Validation
-    if(typeof options === 'object' && options && options.skip_validate){
+    if(typeof options === 'object' && options.skip_validate){
       options.logger.warn('MisstepWarning: Overriding Misstep.Catcher constructor options validation is not advised. It could result in runtime errors being thrown');
+    }else if(typeof options !== 'object'){
+      throw new MisstepError('MisstepError: Misstep.Catcher options is not an object.');
     }else{
       let ajv = new Ajv();
       ajv_instanceof(ajv);
@@ -42,11 +44,35 @@ class Catcher {
 
   catcher(params) {
     let name = params.type;
-    let bind = Array.isArray(params.bind) ? params.bind : [];
+    let bind;
+    // Obtaining the args to bind to the callback from the params
+    if(typeof params === 'function'){
+      throw new MisstepError('Cannot pass a function as parameters to Catcher.catch.');
+    }else if(params.bind && typeof params.bind === 'object'){
+      if(Array.isArray(params.bind)){
+        bind = [].slice.call(params.bind);
+      }else{
+        try{
+          bind = Array.from(params.bind);
+        }catch(e){
+          bind = [];
+        }
+      }
+    }else if(params.hasOwnProperty('bind')){
+      bind = [params.bind];
+    }else{
+      bind = [];
+    }
+    // Adding the options and logger as first two args of signature
+    params.options = params.options ? params.options : {};
     bind.unshift({ ...params.options, logger: private_store.get(this) });
 
     if(!name || this.catchers.names.indexOf(name) === -1) {
-      return this.barebone.bind(this, ...bind);
+      if(this.catchers.callbacks['barebone']){
+        return this.catchers.callbacks['barebone'].bind(this, ...bind);
+      }else{
+        return this.barebone.bind(this, ...bind);
+      }
     }else{
       switch(name) {
       case 'barebone':
@@ -77,13 +103,13 @@ class Catcher {
   }
 
   barebone(options, err) {
-    let logger = options.logger;
+    let logger = private_store.get(this);
     logger.error(err);
     return this.handleOptions(options, err);
   }
 
   response(options, res, err) {
-    let logger = options.logger;
+    let logger = private_store.get(this);
     logger.error(err);
     if(err instanceof ResponseError){
       res.status(err.status).json({

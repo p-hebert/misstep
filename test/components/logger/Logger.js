@@ -42,7 +42,7 @@ describe('Logger', function() {
         assert.fail(false, false, 'Invalid constructor options passed validation');
       }catch(e){
         expect(e).to.be.instanceof(Error);
-        expect(e.stack).to.have.string('MisstepError');
+        expect(e.stack).to.have.string('options did not pass validation');
       }
       done();
     });
@@ -65,7 +65,7 @@ describe('Logger', function() {
           assert.fail(false, false, 'Invalid constructor options passed validation');
         }catch(e){
           expect(e).to.be.instanceof(Error);
-          expect(e.stack).to.have.string('MisstepError');
+          expect(e.stack).to.have.string('options did not pass validation');
         }
         done();
       });
