@@ -1,0 +1,23 @@
+[
+  {
+    "name": "FIRST",
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "SECOND",
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": ""
+      }
+    ]
+  }
+]

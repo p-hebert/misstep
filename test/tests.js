@@ -1,4 +1,7 @@
 const tests = {
+  'builder': {
+    'path': './components/builder/Builder.js'
+  },
   'catcher': {
     'path': './components/catcher/Catcher.js'
   },

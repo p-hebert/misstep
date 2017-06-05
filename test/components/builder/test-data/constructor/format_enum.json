@@ -1,0 +1,52 @@
+[
+  {
+    "name": "FIRST:",
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "",
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "status": 500,
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "status": "inherit",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "",
+            "status": "inherit"
+          }
+        ]
+      }
+    ]
+  }
+]

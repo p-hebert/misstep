@@ -5,15 +5,15 @@ import ResponseError from '../ResponseError';
 const errors = [
   {
     'key': 'EXTENDABLE',
-    'constructor': ExtendableError
+    '$constructor': ExtendableError
   },
   {
     'key': 'MISSTEP',
-    'constructor': MisstepError
+    '$constructor': MisstepError
   },
   {
     'key': 'RESPONSE',
-    'constructor': ResponseError
+    '$constructor': ResponseError
   }
 ];
 

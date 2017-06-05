@@ -13,13 +13,13 @@ class Catcher {
     if(typeof options === 'object' && options.skip_validate){
       options.logger.warn('MisstepWarning: Overriding Misstep.Catcher constructor options validation is not advised. It could result in runtime errors being thrown');
     }else if(typeof options !== 'object'){
-      throw new MisstepError('MisstepError: Misstep.Catcher options is not an object.');
+      throw new MisstepError('Misstep.Catcher options is not an object.');
     }else{
       let ajv = new Ajv();
       ajv_instanceof(ajv);
       ajv_instanceof.definition.CONSTRUCTORS.Logger = Logger;
       if(!ajv.validate(optschema, options)){
-        throw new MisstepError('MisstepError: Misstep.Catcher options did not pass validation. See payload for more information', ajv.errors);
+        throw new MisstepError('Misstep.Catcher options did not pass validation. See payload for more information', ajv.errors);
       }
     }
     // Setting Logger

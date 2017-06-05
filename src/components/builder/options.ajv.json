@@ -1,5 +1,5 @@
 {
-  "required": ["types", "logger"],
+  "required": ["logger"],
   "properties": {
     "skip_validate": { "type": "boolean" },
     "logger": {
@@ -11,17 +11,16 @@
       "items": {
         "oneOf": [
           {
-            "required": ["category", "constructor"],
+            "required": ["key", "$constructor"],
             "properties": {
               "key": { "type": "string" },
-              "constructor": {
-                "instanceof": ["Function", "ExtendableError"],
-                "required": ["name"],
+              "$constructor": {
+                "instanceof": "ExtendableError"
               }
             }
           },
           {
-            "required": ["category", "callback"],
+            "required": ["key", "callback"],
             "properties": {
               "key": { "type": "string" },
               "callback": {
@@ -37,7 +36,7 @@
       "items": {
         "required": ["name", "description", "children"],
         "properties": {
-          "name": { "type": "string", "format": "[A-Z0-9_-]+"},
+          "name": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
           "description": { "type": "string" },
           "status": { "enum": ["inherit",100,101,102,200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,306,307,308,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,421,422,423,424,426,428,429,431,451,500,501,502,503,504,505,506,507,508,510,511] },
           "children": {
@@ -46,16 +45,16 @@
             "items": {
               "required": ["name", "description", "children"],
               "properties": {
-                "name": { "type": "string", "format": "[A-Z0-9_-]+"},
+                "name": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
                 "description": { "type": "string" },
                 "status": { "enum": ["inherit",100,101,102,200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,306,307,308,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,421,422,423,424,426,428,429,431,451,500,501,502,503,504,505,506,507,508,510,511] },
                 "children": {
 
                   "minItems": 1,
                   "items": {
-                    "required": ["name", "description", "children"],
+                    "required": ["name", "description"],
                     "properties": {
-                      "name": { "type": "string", "format": "[A-Z0-9_-]+"},
+                      "name": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
                       "description": { "type": "string" },
                       "status": { "enum": ["inherit",100,101,102,200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,306,307,308,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,421,422,423,424,426,428,429,431,451,500,501,502,503,504,505,506,507,508,510,511] }
                     }

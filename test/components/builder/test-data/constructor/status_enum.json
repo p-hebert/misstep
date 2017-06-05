@@ -1,0 +1,74 @@
+[
+  {
+    "name": "NULL_STATUS",
+    "status": null,
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "OBJECT_STATUS",
+    "status": {},
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "status": "inherit",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "",
+            "status": "inherit"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "UNSUPPORTED_STRING_STATUS",
+    "status": "something unsupported",
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "UNSUPPORTED_INT_STATUS",
+    "status": 1000,
+    "description": "",
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "status": "inherit",
+        "children": [
+          {
+            "name": "ERROR",
+            "description": "",
+            "status": "inherit"
+          }
+        ]
+      }
+    ]
+  }
+]

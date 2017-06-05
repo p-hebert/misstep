@@ -9,7 +9,7 @@
         "children": [
           {
             "name": "ERROR",
-            "description": "This is the default error for the Misstep library. This error does not provide any useful information to the user and should only be used for testing purposes.",
+            "description": "This is the default error for the Misstep library. This error does not provide any useful information to the user and should only be used for testing purposes."
           }
         ]
       }
@@ -25,7 +25,7 @@
         "children": [
           {
             "name": "ERROR",
-            "description": "Misstep has encountered an unknown error. See payload for more information",
+            "description": "Misstep has encountered an unknown error. See payload for more information"
           }
         ]
       },
