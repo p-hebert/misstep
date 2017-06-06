@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import { expect } from 'chai';
-import ExtendableError from '../../../src/components/errors/ExtendableError';
+import ExtendableError from '../../../../src/components/errors/ExtendableError';
 
 describe('ExtendableError', function() {
   describe('constructor', function() {

@@ -1,21 +1,27 @@
 const tests = {
   'builder': {
-    'path': './components/builder/Builder.js'
+    'path': './src/components/builder/Builder.js'
   },
   'catcher': {
-    'path': './components/catcher/Catcher.js'
+    'path': './src/components/catcher/Catcher.js'
   },
   'errors/extendable': {
-    'path': './components/errors/ExtendableError.js'
+    'path': './src/components/errors/ExtendableError.js'
   },
   'errors/misstep': {
-    'path': './components/errors/MisstepError.js'
+    'path': './src/components/errors/MisstepError.js'
   },
   'errors/response': {
-    'path': './components/errors/ResponseError.js'
+    'path': './src/components/errors/ResponseError.js'
   },
   'logger': {
-    'path': './components/logger/Logger.js'
+    'path': './src/components/logger/Logger.js'
+  },
+  'misstep': {
+    'path': './src/components/misstep/Misstep.js'
+  },
+  'index': {
+    'path': './src/index.js'
   }
 };
 

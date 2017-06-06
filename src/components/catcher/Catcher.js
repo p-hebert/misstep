@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
-import Logger from '../logger/Logger';
+import { Logger } from '../logger/Logger';
 import MisstepError from '../errors/MisstepError';
 import ResponseError from '../errors/ResponseError';
 import optschema from './options.ajv.json';
@@ -10,8 +10,8 @@ let private_store = new WeakMap();
 class Catcher {
   constructor(options) {
     // Validation
-    if(typeof options === 'object' && options.skip_validate){
-      options.logger.warn('MisstepWarning: Overriding Misstep.Catcher constructor options validation is not advised. It could result in runtime errors being thrown');
+    if(typeof options === 'object' && options && options.skip_validate){
+      options.no_warn || options.logger.warn('MisstepWarning: Overriding Misstep.Catcher constructor options validation is not advised. It could result in runtime errors being thrown');
     }else if(typeof options !== 'object'){
       throw new MisstepError('Misstep.Catcher options is not an object.');
     }else{

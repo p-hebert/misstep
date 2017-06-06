@@ -1,4 +1,4 @@
-import ResponseError from '../../../src/components/errors/ResponseError';
+import ResponseError from '../../../../src/components/errors/ResponseError';
 
 class ExtendedResponseError extends ResponseError {
   constructor(error = {}){

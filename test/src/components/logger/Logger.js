@@ -14,18 +14,24 @@ describe('Logger', function() {
   before(function() {
     mockery.enable();
     // Warning Overrides for node_modules
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-preset-es2015/lib/index.js'));
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-preset-stage-0/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-es2015/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-stage-0/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
     // Allow modules to be loaded normally
-    mockery.registerAllowable('../../../src/components/logger/Logger');
+    mockery.registerAllowable('../../../../src/components/logger/Logger');
     mockery.registerAllowable('./options.ajv.json');
     // Register others to be replaced with stubs
     mockery.registerMock('../errors/MisstepError', MisstepErrorStub);
-    // Register modules already loaded to avoid warning for dependencies of said modules
-    mockery.registerMock('ajv', Ajv);
-    mockery.registerMock('ajv-keywords/keywords/instanceof', ajv_instanceof);
     // Loading module under test
-    Logger = require('../../../src/components/logger/Logger').default;
+    Logger = require('../../../../src/components/logger/Logger').Logger;
+  });
+
+  afterEach(function() {
+    sandbox.restore();
+  });
+
+  after(function() {
+    mockery.disable();
   });
 
   describe('constructor', function() {
@@ -119,13 +125,5 @@ describe('Logger', function() {
       sinon.assert.calledWith(loggerStub.silly, 'silly', 'silly');
       done();
     });
-  });
-
-  afterEach(function() {
-    sandbox.restore();
-  });
-
-  after(function() {
-    mockery.disable();
   });
 });

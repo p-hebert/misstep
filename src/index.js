@@ -5,8 +5,5 @@ import { Logger, logger } from './components/logger/Logger';
 import ExtendableError from './components/errors/ExtendableError';
 import ResponseError from './components/errors/ResponseError';
 
-export const default_logger = logger;
-export const ErrorBuilder = Builder;
-export const ErrorCatcher = Catcher;
-export { Logger, ExtendableError, ResponseError };
+export { Builder, Catcher, Logger, logger, ExtendableError, ResponseError };
 export default Misstep;

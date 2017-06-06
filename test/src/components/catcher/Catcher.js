@@ -5,8 +5,8 @@ import mockery from 'mockery';
 import path from 'path';
 import Ajv from 'ajv';
 import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
-import MisstepError from '../../../src/components/errors/MisstepError';
-import ResponseError from '../../../src/components/errors/ResponseError';
+import MisstepError from '../../../../src/components/errors/MisstepError';
+import ResponseError from '../../../../src/components/errors/ResponseError';
 import ExtendedResponseError from './ExtendedResponseError';
 
 const sandbox = sinon.sandbox.create();
@@ -29,26 +29,24 @@ describe('Catcher', function() {
 
   before(function() {
     mockery.enable();
+    mockery.warnOnReplace(false);
     // Warning Overrides for node_modules
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-preset-es2015/lib/index.js'));
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-preset-stage-0/lib/index.js'));
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-es2015/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-stage-0/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
     mockery.registerAllowable('./refs/json-schema-draft-06.json');
 
     // Allow modules to be loaded normally
-    mockery.registerAllowable('../../../src/components/catcher/Catcher');
+    mockery.registerAllowable('../../../../src/components/catcher/Catcher');
     mockery.registerAllowable('./options.ajv.json');
     mockery.registerAllowable('./options.ajv.json');
     mockery.registerAllowable('./ExtendableError');
     mockery.registerAllowable('../errors/MisstepError');
     mockery.registerAllowable('../errors/ResponseError');
     // Register others to be replaced with stubs
-    mockery.registerMock('../logger/Logger', LoggerStub);
-    // Register modules already loaded to avoid warning for dependencies of said modules
-    mockery.registerMock('ajv', Ajv);
-    mockery.registerMock('ajv-keywords/keywords/instanceof', ajv_instanceof);
+    mockery.registerMock('../logger/Logger', { Logger: LoggerStub, logger: undefined });
     // Loading module under test
-    Catcher = require('../../../src/components/catcher/Catcher').default;
+    Catcher = require('../../../../src/components/catcher/Catcher').default;
   });
 
   after(function(){

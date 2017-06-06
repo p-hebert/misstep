@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
-import Logger from '../logger/Logger';
+import { Logger } from '../logger/Logger';
 import MisstepError from '../errors/MisstepError';
 import ExtendableError from '../errors/ExtendableError';
 import optschema from './options.ajv.json';
@@ -13,7 +13,7 @@ class Builder {
   constructor(options){
     // Validation
     if(typeof options === 'object' && options && options.skip_validate){
-      options.logger.warn('MisstepWarning: Overriding Misstep.Builder constructor options validation is not advised. It could result in runtime errors being thrown');
+      options.no_warn || options.logger.warn('MisstepWarning: Overriding Misstep.Builder constructor options validation is not advised. It could result in runtime errors being thrown');
     }else if(typeof options !== 'object'){
       throw new MisstepError('Misstep.Builder options is not an object.');
     }else{

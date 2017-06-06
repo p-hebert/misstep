@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import { expect } from 'chai';
-import MisstepError from '../../../src/components/errors/MisstepError';
+import MisstepError from '../../../../src/components/errors/MisstepError';
 
 describe('MisstepError', function() {
   describe('constructor', function() {

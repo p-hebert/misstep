@@ -25,8 +25,8 @@ const logger = {
 
 class Logger {
   constructor(options = { logger }) {
-    if(typeof options === 'object' && options.skip_validate){
-      options.logger.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
+    if(typeof options === 'object' && options && options.skip_validate){
+      options.no_warn || options.logger.warn('MisstepWarning: Overriding Misstep.Logger constructor options validation is not advised. It could result in runtime errors being thrown');
     }else{
       let ajv = new Ajv();
       ajv_instanceof(ajv);
@@ -68,5 +68,4 @@ class Logger {
 
 Logger.LEVELS = LEVELS.NPM;
 
-export { logger };
-export default Logger;
+export { Logger, logger };

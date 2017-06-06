@@ -5,9 +5,9 @@ import mockery from 'mockery';
 import path from 'path';
 import Ajv from 'ajv';
 import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
-import ExtendableError from '../../../src/components/errors/ExtendableError';
-import MisstepError from '../../../src/components/errors/MisstepError';
-import ResponseError from '../../../src/components/errors/ResponseError';
+import ExtendableError from '../../../../src/components/errors/ExtendableError';
+import MisstepError from '../../../../src/components/errors/MisstepError';
+import ResponseError from '../../../../src/components/errors/ResponseError';
 import format_enum from './test-data/constructor/format_enum.json';
 import description_enum from './test-data/constructor/description_enum.json';
 import status_enum from './test-data/constructor/status_enum.json';
@@ -31,13 +31,13 @@ describe('Builder', function(){
   before(function() {
     mockery.enable();
     // Warning Overrides for node_modules
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-preset-es2015/lib/index.js'));
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-preset-stage-0/lib/index.js'));
-    mockery.registerAllowable(path.join(__dirname, '../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-es2015/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-stage-0/lib/index.js'));
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
     mockery.registerAllowable('./refs/json-schema-draft-06.json');
 
     // Allow modules to be loaded normally
-    mockery.registerAllowable('../../../src/components/builder/Builder');
+    mockery.registerAllowable('../../../../src/components/builder/Builder');
     mockery.registerAllowable('./options.ajv.json');
     mockery.registerAllowable('../ExtendableError');
     mockery.registerAllowable('../MisstepError');
@@ -49,12 +49,12 @@ describe('Builder', function(){
     mockery.registerAllowable('../errors/defaults/enum.json');
 
     // Register others to be replaced with stubs
-    mockery.registerMock('../logger/Logger', LoggerStub);
+    mockery.registerMock('../logger/Logger', { Logger: LoggerStub, logger: undefined });
     // Register modules already loaded to avoid warning for dependencies of said modules
     mockery.registerMock('ajv', Ajv);
     mockery.registerMock('ajv-keywords/keywords/instanceof', ajv_instanceof);
     // Loading module under test
-    Builder = require('../../../src/components/builder/Builder').default;
+    Builder = require('../../../../src/components/builder/Builder').default;
   });
 
   after(function(){

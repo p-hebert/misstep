@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import { expect } from 'chai';
-import ResponseError from '../../../src/components/errors/ResponseError';
+import ResponseError from '../../../../src/components/errors/ResponseError';
 
 describe('ResponseError', function() {
   describe('constructor', function() {
