@@ -34,6 +34,8 @@ describe('Catcher', function() {
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-es2015/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-stage-0/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
+    mockery.registerAllowable('ajv');
+    mockery.registerAllowable('ajv-keywords/keywords/instanceof');
     mockery.registerAllowable('./refs/json-schema-draft-06.json');
 
     // Allow modules to be loaded normally
@@ -51,6 +53,8 @@ describe('Catcher', function() {
 
   after(function(){
     sandbox.restore();
+    mockery.deregisterAll();
+    mockery.disable();
   });
 
   describe('constructor', function() {
@@ -60,12 +64,12 @@ describe('Catcher', function() {
     beforeEach(function(){
       logger = new LoggerStub();
       loggerStub = {
-        error: sinon.stub(logger, 'error'),
-        warn: sinon.stub(logger, 'warn'),
-        info: sinon.stub(logger, 'info'),
-        verbose: sinon.stub(logger, 'verbose'),
-        debug: sinon.stub(logger, 'debug'),
-        silly: sinon.stub(logger, 'silly')
+        error: sandbox.stub(logger, 'error'),
+        warn: sandbox.stub(logger, 'warn'),
+        info: sandbox.stub(logger, 'info'),
+        verbose: sandbox.stub(logger, 'verbose'),
+        debug: sandbox.stub(logger, 'debug'),
+        silly: sandbox.stub(logger, 'silly')
       };
     });
 
@@ -140,7 +144,7 @@ describe('Catcher', function() {
     });
 
     it('should add custom catchers to the Catcher instance', function(done) {
-      let spycb = sinon.spy();
+      let spycb = sandbox.spy();
       let catcher = new Catcher({logger, catchers: {'test': spycb}});
       expect(catcher.catchers).to.be.an('object');
       if(typeof catcher.catchers === 'object'){
@@ -159,12 +163,12 @@ describe('Catcher', function() {
     before(function() {
       logger = new LoggerStub();
       loggerStub = {
-        error: sinon.stub(logger, 'error'),
-        warn: sinon.stub(logger, 'warn'),
-        info: sinon.stub(logger, 'info'),
-        verbose: sinon.stub(logger, 'verbose'),
-        debug: sinon.stub(logger, 'debug'),
-        silly: sinon.stub(logger, 'silly')
+        error: sandbox.stub(logger, 'error'),
+        warn: sandbox.stub(logger, 'warn'),
+        info: sandbox.stub(logger, 'info'),
+        verbose: sandbox.stub(logger, 'verbose'),
+        debug: sandbox.stub(logger, 'debug'),
+        silly: sandbox.stub(logger, 'silly')
       };
       catcher = new Catcher({logger});
     });
@@ -231,12 +235,12 @@ describe('Catcher', function() {
     before(function() {
       logger = new LoggerStub();
       loggerStub = {
-        error: sinon.stub(logger, 'error'),
-        warn: sinon.stub(logger, 'warn'),
-        info: sinon.stub(logger, 'info'),
-        verbose: sinon.stub(logger, 'verbose'),
-        debug: sinon.stub(logger, 'debug'),
-        silly: sinon.stub(logger, 'silly')
+        error: sandbox.stub(logger, 'error'),
+        warn: sandbox.stub(logger, 'warn'),
+        info: sandbox.stub(logger, 'info'),
+        verbose: sandbox.stub(logger, 'verbose'),
+        debug: sandbox.stub(logger, 'debug'),
+        silly: sandbox.stub(logger, 'silly')
       };
       catcher = new Catcher({logger});
     });
@@ -252,7 +256,7 @@ describe('Catcher', function() {
     });
 
     it('should call handleOptions', function(done) {
-      let hospy = sinon.spy(catcher, 'handleOptions');
+      let hospy = sandbox.spy(catcher, 'handleOptions');
       catcher.barebone({}, new Error());
       sinon.assert.calledOnce(hospy);
       hospy.restore();
@@ -268,12 +272,12 @@ describe('Catcher', function() {
     before(function() {
       logger = new LoggerStub();
       loggerStub = {
-        error: sinon.stub(logger, 'error'),
-        warn: sinon.stub(logger, 'warn'),
-        info: sinon.stub(logger, 'info'),
-        verbose: sinon.stub(logger, 'verbose'),
-        debug: sinon.stub(logger, 'debug'),
-        silly: sinon.stub(logger, 'silly')
+        error: sandbox.stub(logger, 'error'),
+        warn: sandbox.stub(logger, 'warn'),
+        info: sandbox.stub(logger, 'info'),
+        verbose: sandbox.stub(logger, 'verbose'),
+        debug: sandbox.stub(logger, 'debug'),
+        silly: sandbox.stub(logger, 'silly')
       };
       catcher = new Catcher({logger});
     });
@@ -329,12 +333,12 @@ describe('Catcher', function() {
     beforeEach(function(){
       logger = new LoggerStub();
       loggerStub = {
-        error: sinon.stub(logger, 'error'),
-        warn: sinon.stub(logger, 'warn'),
-        info: sinon.stub(logger, 'info'),
-        verbose: sinon.stub(logger, 'verbose'),
-        debug: sinon.stub(logger, 'debug'),
-        silly: sinon.stub(logger, 'silly')
+        error: sandbox.stub(logger, 'error'),
+        warn: sandbox.stub(logger, 'warn'),
+        info: sandbox.stub(logger, 'info'),
+        verbose: sandbox.stub(logger, 'verbose'),
+        debug: sandbox.stub(logger, 'debug'),
+        silly: sandbox.stub(logger, 'silly')
       };
     });
 
@@ -344,15 +348,24 @@ describe('Catcher', function() {
 
     it('should call the barebone callback by default', function(done) {
       let catcher = new Catcher({logger});
-      let barebonespy = sinon.spy(catcher, 'barebone');
+      let barebonespy = sandbox.spy(catcher, 'barebone');
       catcher.catcher({})();
       catcher.catcher({type: 'unbound callback'})();
       sinon.assert.calledTwice(barebonespy);
       done();
     });
 
+    it('should call the default barebone callback if not overriden', function(done) {
+      let catcher = new Catcher({logger});
+      let barebonespy = sandbox.spy(catcher, 'barebone');
+      catcher.catcher({})();
+      catcher.catcher({type: 'barebone'})();
+      sinon.assert.calledTwice(barebonespy);
+      done();
+    });
+
     it('should return the added catcher callback', function(done) {
-      let spycb = sinon.spy();
+      let spycb = sandbox.spy();
       let catcher = new Catcher({logger, catchers: {'test': spycb}});
       catcher.catcher({type: 'test'})();
       sinon.assert.calledOnce(spycb);
@@ -360,8 +373,8 @@ describe('Catcher', function() {
     });
 
     it('should return the overriden response/barebone catcher callbacks', function(done) {
-      let barebonestub = sinon.stub();
-      let responsestub = sinon.stub();
+      let barebonestub = sandbox.stub();
+      let responsestub = sandbox.stub();
       let catcher = new Catcher({logger, catchers: {'barebone': barebonestub, 'response': responsestub}});
       // Testing default to barebone
       catcher.catcher({})();
@@ -385,22 +398,51 @@ describe('Catcher', function() {
       done();
     });
 
-    it('should bind non-array arguments', function(done) {
+    it('should bind null and non-array-like objects', function(done) {
       let catcher = new Catcher({logger});
-      let barebonespy = sinon.spy(catcher, 'barebone');
+      let barebonespy = sandbox.spy(catcher, 'barebone');
+      let options = {};
+      let bind = null;
+      // null
+      catcher.catcher({options, bind})();
+      expect(barebonespy.args[0][1]).to.be.null;
+      // non-array-like object
+      bind = {};
+      catcher.catcher({options, bind})();
+      expect(barebonespy.args[1][1]).to.be.equal(bind);
+      done();
+    });
+
+    it('should bind non-object arguments', function(done) {
+      let catcher = new Catcher({logger});
+      let barebonespy = sandbox.spy(catcher, 'barebone');
       let options = {};
       let bind = 'hello';
-      catcher.catcher({options: options, bind: bind})();
+      // string
+      catcher.catcher({options, bind})();
       expect(barebonespy.args[0][1]).to.be.equal('hello');
+      // boolean
+      bind = true;
+      catcher.catcher({options, bind})();
+      expect(barebonespy.args[1][1]).to.be.true;
+      // number
+      bind = 42;
+      catcher.catcher({options, bind})();
+      expect(barebonespy.args[2][1]).to.be.equal(42);
+      bind = sandbox.stub();
+      // function
+      catcher.catcher({options, bind})();
+      barebonespy.args[3][1]();
+      sinon.assert.calledOnce(bind);
       done();
     });
 
     it('should bind arguments from an array', function(done) {
       let catcher = new Catcher({logger});
-      let barebonespy = sinon.spy(catcher, 'barebone');
+      let barebonespy = sandbox.spy(catcher, 'barebone');
       let options = {};
       let bind = ['hello', 'world'];
-      catcher.catcher({options: options, bind: bind})();
+      catcher.catcher({options, bind})();
       expect(barebonespy.args[0][1]).to.be.equal('hello');
       expect(barebonespy.args[0][2]).to.be.equal('world');
       done();
@@ -408,12 +450,12 @@ describe('Catcher', function() {
 
     it('should bind arguments from an array-like', function(done) {
       let catcher = new Catcher({logger});
-      let barebonespy = sinon.spy(catcher, 'barebone');
+      let barebonespy = sandbox.spy(catcher, 'barebone');
       let options = {};
       // Getting arguments from a function
       const argscb = function() { return arguments; };
       let bind = argscb('hello', 'world');
-      catcher.catcher({options: options, bind: bind})();
+      catcher.catcher({options, bind})();
       expect(barebonespy.args[0][1]).to.be.equal('hello');
       expect(barebonespy.args[0][2]).to.be.equal('world');
       done();

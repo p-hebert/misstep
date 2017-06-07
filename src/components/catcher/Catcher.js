@@ -48,18 +48,24 @@ class Catcher {
     // Obtaining the args to bind to the callback from the params
     if(typeof params === 'function'){
       throw new MisstepError('Cannot pass a function as parameters to Catcher.catch.');
-    }else if(params.bind && typeof params.bind === 'object'){
+    }else if(typeof params.bind === 'object'){
+      // bind = array
       if(Array.isArray(params.bind)){
         bind = [].slice.call(params.bind);
+      // bind = array-like object?
       }else{
         try{
           bind = Array.from(params.bind);
+          if(!bind.length) bind = [params.bind];
+        // bind = null || non-array-like object
         }catch(e){
-          bind = [];
+          bind = [params.bind];
         }
       }
+    // bind = undefined, boolean, string, number, function
     }else if(params.hasOwnProperty('bind')){
       bind = [params.bind];
+    // no bind
     }else{
       bind = [];
     }
