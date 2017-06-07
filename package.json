@@ -7,19 +7,27 @@
   "author": "p-hebert <philippe.hebert.qc@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "test": "cross-env NODE_ENV=test nyc --cache --reporter=lcov --reporter=text mocha --compilers js:babel-core/register",
     "compile": "babel -d lib/ src/"
+  },
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false
   },
   "dependencies": {
     "ajv": "^5.0.1",
-    "ajv-keywords": "^2.0.0"
+    "ajv-keywords": "^2.0.0",
+    "better-npm-run": "^0.0.15"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-istanbul": "^4.1.4",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-uglify": "^1.0.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.0.1",
+    "cross-env": "^5.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-babel": "^4.1.1",
@@ -27,8 +35,10 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2",
     "mockery": "^2.0.0",
-    "rewire": "^2.5.2",
+    "nyc": "^11.0.2",
     "sinon": "^2.3.2"
   }
 }
