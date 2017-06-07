@@ -7,8 +7,9 @@
   "author": "p-hebert <philippe.hebert.qc@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "cross-env NODE_ENV=test nyc --cache --reporter=lcov --reporter=text mocha --compilers js:babel-core/register",
-    "compile": "babel -d lib/ src/"
+    "ci": "cross-env NODE_ENV=test nyc --cache --reporter=lcov --reporter=text mocha --compilers js:babel-core/register",
+    "compile": "babel -d lib/ src/",
+    "test": "mocha --compilers js:babel-core/register"
   },
   "nyc": {
     "sourceMap": false,

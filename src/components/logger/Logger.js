@@ -17,9 +17,9 @@ const LEVELS = {
 const logger = {
   error: function() { console.error.apply(console, arguments); },
   warn: function() { console.warn.apply(console, arguments); },
-  info: function() { console.log.apply(console, arguments); },
+  info: function() { console.info.apply(console, arguments); },
   verbose: function() { console.log.apply(console, arguments); },
-  debug: function() { console.debug.apply(console, arguments); },
+  debug: function() { console.log.apply(console, arguments); },
   silly: function() { console.trace.apply(console, arguments); }
 };
 

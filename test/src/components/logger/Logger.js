@@ -20,6 +20,9 @@ describe('Logger', function() {
     // Allow modules to be loaded normally
     mockery.registerAllowable('../../../../src/components/logger/Logger');
     mockery.registerAllowable('./options.ajv.json');
+    mockery.registerAllowable('ajv');
+    mockery.registerAllowable('ajv-keywords/keywords/instanceof');
+    mockery.registerAllowable('./refs/json-schema-draft-06.json');
     // Register others to be replaced with stubs
     mockery.registerMock('../errors/MisstepError', MisstepErrorStub);
     // Loading module under test
@@ -31,14 +34,43 @@ describe('Logger', function() {
   });
 
   after(function() {
+    mockery.deregisterAll();
     mockery.disable();
   });
 
   describe('constructor', function() {
+    afterEach(function() {
+      sandbox.restore();
+    });
+
     it('should call console.warn if skip_validate is passed', function(done) {
-      const warnStub = sinon.stub(console, 'warn');
+      const warnStub = sandbox.stub(console, 'warn');
       let logger = new Logger({logger: console, skip_validate: true});
       sinon.assert.calledOnce(warnStub);
+      done();
+    });
+
+    it('should call console methods as default logger', function(done) {
+      const consoleStub = {
+        error: sandbox.stub(console, 'error'),
+        warn: sandbox.stub(console, 'warn'),
+        info: sandbox.stub(console, 'info'),
+        log: sandbox.stub(console, 'log'),
+        trace: sandbox.stub(console, 'trace')
+      };
+      let logger = new Logger();
+      logger.error('error');
+      logger.warn('warn');
+      logger.info('info');
+      logger.log('info');
+      logger.verbose('log');
+      logger.debug('log');
+      logger.silly('trace');
+      sinon.assert.calledOnce(consoleStub.error);
+      sinon.assert.calledOnce(consoleStub.warn);
+      sinon.assert.calledTwice(consoleStub.info);
+      sinon.assert.calledTwice(consoleStub.log);
+      sinon.assert.calledOnce(consoleStub.trace);
       done();
     });
 
@@ -93,12 +125,12 @@ describe('Logger', function() {
         silly: () => {}
       };
       const loggerStub = {
-        error: sinon.stub(logger, 'error'),
-        warn: sinon.stub(logger, 'warn'),
-        info: sinon.stub(logger, 'info'),
-        verbose: sinon.stub(logger, 'verbose'),
-        debug: sinon.stub(logger, 'debug'),
-        silly: sinon.stub(logger, 'silly')
+        error: sandbox.stub(logger, 'error'),
+        warn: sandbox.stub(logger, 'warn'),
+        info: sandbox.stub(logger, 'info'),
+        verbose: sandbox.stub(logger, 'verbose'),
+        debug: sandbox.stub(logger, 'debug'),
+        silly: sandbox.stub(logger, 'silly')
       };
 
       let l = new Logger({ logger });
