@@ -36,8 +36,10 @@ class Misstep {
       };
       logger_instance = new Logger(options.logger);
       no_warn || logger_instance.warn('MisstepWarning: Overriding Misstep constructor options validation is not advised. It could result in runtime errors being thrown');
+    }else if(typeof options === 'object' && options && options.logger){
+      logger_instance = new Logger(options.logger);
     }else{
-      logger_instance = new Logger(options.logger || logger);
+      logger_instance = new Logger({logger});
     }
 
     this.instances = {
