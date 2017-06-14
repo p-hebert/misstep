@@ -31,6 +31,7 @@ describe('Builder', function(){
   var Builder;
 
   before(function(done) {
+    this.timeout(5000);
     mockery.enable();
     // Warning Overrides for node_modules
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-istanbul/lib/index.js'));
