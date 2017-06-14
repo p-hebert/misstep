@@ -7,9 +7,9 @@
   "author": "p-hebert <philippe.hebert.qc@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "ci": "cross-env NODE_ENV=test nyc --cache --reporter=lcov --reporter=text mocha --compilers js:babel-core/register",
+    "test": "cross-env NODE_ENV=test nyc --cache --reporter=lcov --reporter=text mocha --compilers js:babel-core/register",
     "compile": "babel -d lib/ src/",
-    "test": "mocha --compilers js:babel-core/register"
+    "test:no-cov": "mocha --compilers js:babel-core/register"
   },
   "nyc": {
     "sourceMap": false,
@@ -17,8 +17,7 @@
   },
   "dependencies": {
     "ajv": "^5.0.1",
-    "ajv-keywords": "^2.0.0",
-    "better-npm-run": "^0.0.15"
+    "ajv-keywords": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

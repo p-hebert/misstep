@@ -98,7 +98,7 @@ class Builder {
     }
 
     if(Callback) {
-      return Callback(error);
+      return Callback(type, error);
     }else{
       return new Constructor(error);
     }

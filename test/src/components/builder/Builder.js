@@ -66,6 +66,8 @@ describe('Builder', function(){
 
   after(function(done){
     sandbox.restore();
+    mockery.deregisterAll();
+    mockery.disable();
     done();
   });
 

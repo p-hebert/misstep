@@ -9,23 +9,23 @@
         "children": [
           {
             "name": "RANGE_ERROR",
-            "description": "The RangeError object indicates an error when a value is not in the set or range of allowed values.",
+            "description": "The RangeError object indicates an error when a value is not in the set or range of allowed values."
           },
           {
             "name": "REFERENCE_ERROR",
-            "description": "The ReferenceError object represents an error when a non-existent variable is referenced.",
+            "description": "The ReferenceError object represents an error when a non-existent variable is referenced."
           },
           {
             "name": "SYNTAX_ERROR",
-            "description": "The SyntaxError object represents an error when trying to interpret syntactically invalid code.",
+            "description": "The SyntaxError object represents an error when trying to interpret syntactically invalid code."
           },
           {
             "name": "TYPE_ERROR",
-            "description": "The TypeError object represents an error when a value is not of the expected type.",
+            "description": "The TypeError object represents an error when a value is not of the expected type."
           },
           {
             "name": "URI_ERROR",
-            "description": "The URIError object represents an error when a global URI handling function was used in a wrong way.",
+            "description": "The URIError object represents an error when a global URI handling function was used in a wrong way."
           }
         ]
       }

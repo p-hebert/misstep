@@ -11,7 +11,7 @@ const MisstepErrorStub = Error;
 var Logger;
 
 describe('Logger', function() {
-  before(function() {
+  before(function(done) {
     mockery.enable();
     // Warning Overrides for node_modules
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-istanbul/lib/index.js'));
@@ -28,20 +28,24 @@ describe('Logger', function() {
     mockery.registerMock('../errors/MisstepError', MisstepErrorStub);
     // Loading module under test
     Logger = require('../../../../src/components/logger/Logger').Logger;
+    done();
   });
 
-  afterEach(function() {
+  afterEach(function(done) {
     sandbox.restore();
+    done();
   });
 
-  after(function() {
+  after(function(done) {
     mockery.deregisterAll();
     mockery.disable();
+    done();
   });
 
   describe('constructor', function() {
-    afterEach(function() {
+    afterEach(function(done) {
       sandbox.restore();
+      done();
     });
 
     it('should call console.warn if skip_validate is passed', function(done) {
@@ -109,10 +113,6 @@ describe('Logger', function() {
         done();
       });
     }
-
-    afterEach(function() {
-      sandbox.restore();
-    });
   });
 
   describe('logging methods', function() {

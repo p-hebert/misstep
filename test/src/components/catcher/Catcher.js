@@ -27,7 +27,7 @@ const ExpressResponseStub = function ExpressResponseStub() {
 describe('Catcher', function() {
   var Catcher;
 
-  before(function() {
+  before(function(done) {
     mockery.enable();
     mockery.warnOnReplace(false);
     // Warning Overrides for node_modules
@@ -50,19 +50,21 @@ describe('Catcher', function() {
     mockery.registerMock('../logger/Logger', { Logger: LoggerStub, logger: undefined });
     // Loading module under test
     Catcher = require('../../../../src/components/catcher/Catcher').default;
+    done();
   });
 
-  after(function(){
+  after(function(done){
     sandbox.restore();
     mockery.deregisterAll();
     mockery.disable();
+    done();
   });
 
   describe('constructor', function() {
     var logger;
     var loggerStub;
 
-    beforeEach(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
       loggerStub = {
         error: sandbox.stub(logger, 'error'),
@@ -72,10 +74,12 @@ describe('Catcher', function() {
         debug: sandbox.stub(logger, 'debug'),
         silly: sandbox.stub(logger, 'silly')
       };
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();done
     });
 
     it('should warn the user if skip_validate is passed', function(done){
@@ -161,7 +165,7 @@ describe('Catcher', function() {
     var loggerStub;
     var catcher;
 
-    before(function() {
+    before(function(done) {
       logger = new LoggerStub();
       loggerStub = {
         error: sandbox.stub(logger, 'error'),
@@ -172,10 +176,12 @@ describe('Catcher', function() {
         silly: sandbox.stub(logger, 'silly')
       };
       catcher = new Catcher({logger});
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();
     });
 
     it('should return undefined by default', function(done) {
@@ -233,7 +239,7 @@ describe('Catcher', function() {
     var logger;
     var loggerStub;
 
-    before(function() {
+    before(function(done) {
       logger = new LoggerStub();
       loggerStub = {
         error: sandbox.stub(logger, 'error'),
@@ -244,10 +250,12 @@ describe('Catcher', function() {
         silly: sandbox.stub(logger, 'silly')
       };
       catcher = new Catcher({logger});
+      done();
     });
 
-    after(function() {
+    after(function(done) {
       sandbox.restore();
+      done();
     });
 
     it('should log error to logger.error', function(done) {
@@ -331,7 +339,7 @@ describe('Catcher', function() {
     var logger;
     var loggerStub;
 
-    beforeEach(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
       loggerStub = {
         error: sandbox.stub(logger, 'error'),
@@ -341,10 +349,12 @@ describe('Catcher', function() {
         debug: sandbox.stub(logger, 'debug'),
         silly: sandbox.stub(logger, 'silly')
       };
+      done();
     });
 
-    afterEach(function() {
+    afterEach(function(done) {
       sandbox.restore();
+      done();
     });
 
     it('should call the barebone callback by default', function(done) {

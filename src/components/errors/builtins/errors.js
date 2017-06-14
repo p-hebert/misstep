@@ -1,38 +1,40 @@
-import ExtendableError from '../ExtendableError';
+import DefaultError from '../DefaultError';
 
 const errors = [
   {
     'key': 'ECMASCRIPT',
-    'callback': function(error){
-      if(error.type.valid){
+    'callback': function(type, error){
+      if(type.valid){
         let err;
-        switch(error.type.detailed){
+        switch(type.detailed.name){
         case 'RANGE_ERROR':
           err = new RangeError(error.message);
+          err.type = error.type;
           err.payload = error.payload;
           return err;
         case 'REFERENCE_ERROR':
           err = new ReferenceError(error.message);
+          err.type = error.type;
           err.payload = error.payload;
           return err;
         case 'SYNTAX_ERROR':
           err = new SyntaxError(error.message);
+          err.type = error.type;
           err.payload = error.payload;
           return err;
         case 'TYPE_ERROR':
           err = new TypeError(error.message);
+          err.type = error.type;
           err.payload = error.payload;
           return err;
         case 'URI_ERROR':
           err = new URIError(error.message);
+          err.type = error.type;
           err.payload = error.payload;
           return err;
-        default:
-          return new ExtendableError(error.message, error.payload);
         }
-      }else{
-        return new ExtendableError(error.message, error.payload);
       }
+      return new DefaultError(error);
     }
   }
 ];

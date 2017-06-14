@@ -39,7 +39,7 @@ describe('Misstep', function(){
   var logger;
   var Misstep;
 
-  before(function() {
+  before(function(done) {
     mockery.enable();
     mockery.warnOnReplace(false);
     // Warning Overrides for node_modules
@@ -53,23 +53,26 @@ describe('Misstep', function(){
     mockery.registerMock('../logger/Logger', { Logger: LoggerProxy, logger });
     mockery.registerMock('../catcher/Catcher', CatcherStub);
     mockery.registerMock('../builder/Builder', BuilderStub);
-    // Loading module under test
+    done();
   });
 
-  after(function(){
+  after(function(done){
     mockery.disable();
     sandbox.restore();
+    done();
   });
 
   describe('constructor', function() {
-    beforeEach(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
       mockery.registerMock('../logger/Logger', { Logger: LoggerProxy, logger });
       Misstep = require('../../../../src/components/misstep/Misstep').default;
+      done();
     });
 
-    afterEach(function(){
+    afterEach(function(done){
       sandbox.restore();
+      done();
     });
 
     it('should warn the user if skip_validate is passed', function(done){

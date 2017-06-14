@@ -17,6 +17,9 @@ const tests = {
   'errors/response': {
     'path': './src/components/errors/ResponseError.js'
   },
+  'errors/builtins': {
+    'path': './src/components/errors/builtins/errors.js'
+  },
   'logger': {
     'path': './src/components/logger/Logger.js'
   },
