@@ -31,6 +31,7 @@ describe('Catcher', function() {
     mockery.enable();
     mockery.warnOnReplace(false);
     // Warning Overrides for node_modules
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-istanbul/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-es2015/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-stage-0/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));

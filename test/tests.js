@@ -8,6 +8,9 @@ const tests = {
   'errors/extendable': {
     'path': './src/components/errors/ExtendableError.js'
   },
+  'errors/default': {
+    'path': './src/components/errors/DefaultError.js'
+  },
   'errors/misstep': {
     'path': './src/components/errors/MisstepError.js'
   },
@@ -22,6 +25,9 @@ const tests = {
   },
   'index': {
     'path': './src/index.js'
+  },
+  'subclassof': {
+    'path': './src/utilities/ajv-keywords/subclassof.js'
   }
 };
 

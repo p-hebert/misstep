@@ -15,7 +15,7 @@
             "properties": {
               "key": { "type": "string" },
               "$constructor": {
-                "instanceof": "ExtendableError"
+                "subclassof": "ExtendableError"
               }
             }
           },

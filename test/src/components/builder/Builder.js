@@ -6,8 +6,10 @@ import path from 'path';
 import Ajv from 'ajv';
 import ajv_instanceof from 'ajv-keywords/keywords/instanceof';
 import ExtendableError from '../../../../src/components/errors/ExtendableError';
+import DefaultError from '../../../../src/components/errors/DefaultError';
 import MisstepError from '../../../../src/components/errors/MisstepError';
 import ResponseError from '../../../../src/components/errors/ResponseError';
+import TestError from './TestError';
 import format_enum from './test-data/constructor/format_enum.json';
 import description_enum from './test-data/constructor/description_enum.json';
 import status_enum from './test-data/constructor/status_enum.json';
@@ -28,9 +30,10 @@ const LoggerStub = function Logger() {
 describe('Builder', function(){
   var Builder;
 
-  before(function() {
+  before(function(done) {
     mockery.enable();
     // Warning Overrides for node_modules
+    mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-istanbul/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-es2015/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-preset-stage-0/lib/index.js'));
     mockery.registerAllowable(path.join(__dirname, '../../../../node_modules/babel-plugin-transform-builtin-extend/lib/index.js'));
@@ -39,9 +42,12 @@ describe('Builder', function(){
     // Allow modules to be loaded normally
     mockery.registerAllowable('../../../../src/components/builder/Builder');
     mockery.registerAllowable('./options.ajv.json');
+    mockery.registerAllowable('../../utilities/ajv-keywords/subclassof.js');
     mockery.registerAllowable('../ExtendableError');
+    mockery.registerAllowable('../DefaultError');
     mockery.registerAllowable('../MisstepError');
     mockery.registerAllowable('../ResponseError');
+    mockery.registerAllowable('../errors/DefaultError');
     mockery.registerAllowable('../errors/ExtendableError');
     mockery.registerAllowable('../errors/MisstepError');
     mockery.registerAllowable('../errors/ResponseError');
@@ -55,17 +61,19 @@ describe('Builder', function(){
     mockery.registerMock('ajv-keywords/keywords/instanceof', ajv_instanceof);
     // Loading module under test
     Builder = require('../../../../src/components/builder/Builder').default;
+    done();
   });
 
-  after(function(){
+  after(function(done){
     sandbox.restore();
+    done();
   });
 
   describe('constructor', function() {
     var logger;
     var loggerStub;
 
-    beforeEach(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
       loggerStub = {
         error: sinon.stub(logger, 'error'),
@@ -75,10 +83,12 @@ describe('Builder', function(){
         debug: sinon.stub(logger, 'debug'),
         silly: sinon.stub(logger, 'silly')
       };
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();
     });
 
     it('should warn the user if skip_validate is passed', function(done){
@@ -118,9 +128,10 @@ describe('Builder', function(){
     });
 
     it('should refuse invalid type $constructors', function(done) {
-      try_catcher(done, {logger, types: [ { key: 'test', $constructor: function Constructor(){} } ]}, (e) => {
+      const constructor = function Constructor(){};
+      try_catcher(done, {logger, types: [ { key: 'test', $constructor: constructor } ]}, (e) => {
         expect(e).to.be.instanceof(MisstepError);
-        expect(e.payload[0].keyword).to.be.equal('instanceof');
+        expect(e.payload[0].keyword).to.be.equal('subclassof');
         expect(e.payload[0].dataPath).to.be.equal('.types[0].$constructor');
       });
     });
@@ -244,12 +255,14 @@ describe('Builder', function(){
   describe('parseErrorType', function() {
     var logger;
 
-    beforeEach(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();
     });
 
     it('should return a valid type given a valid string and an existing entry in the default enum', function(done){
@@ -296,12 +309,14 @@ describe('Builder', function(){
   describe('getErrorCallback', function() {
     var logger;
 
-    before(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();
     });
 
     it('should return the proper callback given a valid type', function(done){
@@ -327,12 +342,27 @@ describe('Builder', function(){
   describe('getErrorConstructor', function() {
     var logger;
 
-    before(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();
+    });
+
+    it('should return the proper constructor given a valid constructor function', function(done){
+      let builder = new Builder({logger, types: [ { key: 'TEST', $constructor: TestError } ]});
+      let type = {
+        valid: true,
+        category: {name: 'TEST'},
+        subcategory: {name: 'DEFAULT'},
+        detailed: {name: 'ERROR'}
+      };
+      let err = new (builder.getErrorConstructor(type))();
+      expect(err).to.be.instanceof(TestError);
+      done();
     });
 
     it('should return the proper constructor given a valid type', function(done){
@@ -361,10 +391,10 @@ describe('Builder', function(){
       done();
     });
 
-    it('should return a callback building an ExtendableError if the constructor cannot be found', function(done){
+    it('should return a constructor building a DefaultError if the constructor cannot be found', function(done){
       let builder = new Builder({logger});
-      let err = new (builder.getErrorConstructor({}))('test');
-      expect(err).to.be.instanceof(ExtendableError);
+      let err = new (builder.getErrorConstructor({}))({message: 'test'});
+      expect(err).to.be.instanceof(DefaultError);
       expect(err.message).to.be.equal('test');
       done();
     });
@@ -373,41 +403,105 @@ describe('Builder', function(){
   describe('construct', function() {
     var logger;
 
-    before(function(){
+    beforeEach(function(done){
       logger = new LoggerStub();
+      done();
     });
 
-    after(function(){
+    after(function(done){
       sandbox.restore();
+      done();
+    });
+
+    it('should return a fallback DefaultError if the error provided is not an object', function(done){
+      let builder = new Builder({logger});
+      let err = builder.construct(null);
+      expect(err).to.be.instanceof(DefaultError);
+      expect(err.type).to.be.equal('DEFAULT:FALLBACK:ERROR');
+      expect(err.payload).to.be.equal(null);
+      err = builder.construct(true);
+      expect(err).to.be.instanceof(DefaultError);
+      expect(err.type).to.be.equal('DEFAULT:FALLBACK:ERROR');
+      expect(err.payload).to.be.true;
+      done();
+    });
+
+    it('should return a fallback DefaultError if the type provided is not a string', function(done){
+      let builder = new Builder({logger});
+      let err = builder.construct({type: 0, payload: 'test_payload', message: 'test_message'});
+      expect(err).to.be.instanceof(DefaultError);
+      expect(err.type).to.be.equal('DEFAULT:FALLBACK:ERROR');
+      expect(err.message).to.be.equal('test_message');
+      expect(err.payload).to.be.equal('test_payload');
+      done();
     });
 
     it('should return a properly hydrated error object given a proper type', function(done){
       let builder = new Builder({logger});
-      let err = builder.construct({type: 'RESPONSE:DEFAULT:ERROR', status: 400, payload: 'test_payload', message: 'test_message'})
+      let err = builder.construct({type: 'RESPONSE:DEFAULT:ERROR', status: 400, payload: 'test_payload', message: 'test_message'});
       expect(err).to.be.instanceof(ResponseError);
       expect(err.message).to.be.equal('test_message');
       expect(err.payload).to.be.equal('test_payload');
       expect(err.status).to.be.equal(400);
+      done();
+    });
+
+    it('should return the default message and status if only type is provided', function(done){
+      let builder = new Builder({logger});
+      let err = builder.construct({type: 'RESPONSE:DEFAULT:ERROR'});
+      expect(err).to.be.instanceof(ResponseError);
+      expect(err.status).to.be.equal(500);
+      expect(err.message).to.be.equal('This error is a fatal error that has not been categorized. See payload for more information');
       done();
     });
 
     it('should return a properly hydrated error given an incomplete but sufficient type (category only)', function(done){
       let builder = new Builder({logger});
-      let err = builder.construct({type: 'RESPONSE', status: 400, payload: 'test_payload', message: 'test_message'})
-      expect(err).to.be.instanceof(ResponseError);
-      expect(err.message).to.be.equal('test_message');
+      let err = builder.construct({type: 'DEFAULT', payload: 'test_payload'});
+      expect(err).to.be.instanceof(DefaultError);
+      expect(err.message).to.be.equal('Default Misstep extended error');
       expect(err.payload).to.be.equal('test_payload');
-      expect(err.status).to.be.equal(400);
       done();
     });
 
     it('should return a properly hydrated error given an incomplete but sufficient type (category and subcategory)', function(done){
       let builder = new Builder({logger});
-      let err = builder.construct({type: 'RESPONSE:DEFAULT', status: 400, payload: 'test_payload', message: 'test_message'})
+      let err = builder.construct({type: 'RESPONSE:DEFAULT', payload: 'test_payload'});
       expect(err).to.be.instanceof(ResponseError);
-      expect(err.message).to.be.equal('test_message');
+      expect(err.status).to.be.equal(500);
+      expect(err.type).to.be.equal('RESPONSE:DEFAULT');
+      expect(err.message).to.be.equal('Default response error');
       expect(err.payload).to.be.equal('test_payload');
-      expect(err.status).to.be.equal(400);
+      done();
+    });
+
+    it('should return a properly hydrated error given a complete but unlisted type (subcategory)', function(done){
+      let builder = new Builder({logger});
+      let err = builder.construct({type: 'RESPONSE:UNLISTED:ERROR', payload: 'test_payload'});
+      expect(err).to.be.instanceof(ResponseError);
+      expect(err.status).to.be.equal(500);
+      expect(err.type).to.be.equal('RESPONSE');
+      expect(err.message).to.be.equal('Response error');
+      expect(err.payload).to.be.equal('test_payload');
+      done();
+    });
+
+    it('should return a properly hydrated error given a complete but unlisted type (detailed)', function(done){
+      let builder = new Builder({logger});
+      let err = builder.construct({type: 'RESPONSE:DEFAULT:UNLISTED', payload: 'test_payload'});
+      expect(err).to.be.instanceof(ResponseError);
+      expect(err.status).to.be.equal(500);
+      expect(err.type).to.be.equal('RESPONSE:DEFAULT');
+      expect(err.message).to.be.equal('Default response error');
+      expect(err.payload).to.be.equal('test_payload');
+      done();
+    });
+
+    it('should call a callback given that a callback has been set for the type category', function(done){
+      let callback = sinon.spy();
+      let builder = new Builder({logger, enum: default_enum, types: [{key: 'TEST', callback}]});
+      builder.construct({type: 'TEST:DEFAULT:ERROR', payload: ''});
+      sinon.assert.calledOnce(callback);
       done();
     });
   });

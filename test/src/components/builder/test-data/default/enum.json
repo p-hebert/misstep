@@ -2,13 +2,16 @@
   {
     "name": "TEST",
     "description": "",
+    "status": 500,
     "children": [
       {
         "name": "DEFAULT",
         "description": "",
+        "status": 501,
         "children": [
           {
             "name": "ERROR",
+            "status": 502,
             "description": ""
           }
         ]

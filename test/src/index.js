@@ -19,6 +19,8 @@ describe('index', function(){
       );
     expect(index.ExtendableError).to.be.a('function');
     expect(index.ExtendableError.name).to.be.equal('ExtendableError');
+    expect(index.DefaultError).to.be.a('function');
+    expect(index.DefaultError.name).to.be.equal('DefaultError');
     expect(index.ResponseError).to.be.a('function');
     expect(index.ResponseError.name).to.be.equal('ResponseError');
     done();
