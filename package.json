@@ -1,6 +1,6 @@
 {
   "name": "misstep",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Error Handling Library aiming at standardizing JS Error Handling Practices thoughtout your JS stack",
   "main": "src/index.js",
   "repository": "https://github.com/p-hebert/misstep",
@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "test": "cross-env NODE_ENV=test nyc --cache --reporter=lcov --reporter=text mocha --compilers js:babel-core/register",
+    "prepublish": "npm run compile",
     "compile": "babel -d lib/ src/",
     "test:no-cov": "mocha --compilers js:babel-core/register"
   },
