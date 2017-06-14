@@ -1,0 +1,21 @@
+[
+  {
+    "name": "VALIDATION",
+    "description": "Validation Error",
+    "status": 400,
+    "children": [
+      {
+        "name": "DEFAULT",
+        "description": "",
+        "status": "inherit",
+        "children": [
+          {
+            "name": "ERROR",
+            "status": "inherit",
+            "description": "The property did not pass validation. See payload for more information"
+          }
+        ]
+      }
+    ]
+  }
+]
