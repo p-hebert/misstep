@@ -106,7 +106,7 @@ as error definition enums
 *Error types defined by Misstep and exported to be available to the developer.*
 
 * Includes `ExtendableError`, `DefaultError` and `ResponseError` by default.
-* Includes configuration files for the Builder to enable support of builtin errors such as `ReferenceError` and `TypeError` (Misstep.builtins, Misstep.builtin_enum)
+* Includes configuration files for the Builder to enable support of builtin errors such as `ReferenceError` and `TypeError` (`Misstep.builtin_types`, `Misstep.builtin_enum`)
 
 
 ## <a name="getting-started"></a>Getting Started
@@ -117,7 +117,7 @@ as error definition enums
 yarn add misstep
 ```
 
-(We strongly advise you to use `yarn` instead of `npm`. If you don't already, [go give them some love!](yarnpkg.com))
+(We strongly advise you to use `yarn` instead of `npm`. If you don't already, [go give them some love!](https://yarnpkg.com))
 
 ### <a name="import"></a>Import
 
@@ -172,7 +172,7 @@ Albeit you can instanciate each of the submodules individually, it is strongly
 suggested that you rely on the Misstep constructor for all of your needs.*
 
 * **options.logger (optional) {object}**: The options for the Logger constructor.
-  See [`new Logger(options)`](link) for more details.
+  See [`new Logger(options)`](#api-logger-constructor) for more details.
 * **options.builder (optional) {object}**: The options for the Builder constructor. See below
   for more details.
 * **options.catcher (optional) {object}**: The options for the Catcher constructor. See below
@@ -188,7 +188,7 @@ suggested that you rely on the Misstep constructor for all of your needs.*
 
 *Easy interface to call the `Catcher.catcher` method.*
 
-See the [`Catcher.catcher`](link) section for more information on the signature
+See the [`Catcher.catcher`](#api-catcher-catcher) section for more information on the signature
 of the function.
 
 ##### Example
@@ -208,7 +208,7 @@ return validate()
 
 *Easy interface to call the `Builder.construct` method.*
 
-See the [`Builder.construct`](link) section for more information on the signature
+See the [`Builder.construct`](#api-builder-construct) section for more information on the signature
 of the function.
 
 ##### Example
@@ -233,7 +233,7 @@ function myfunc() {
 
 ### <a name="api-logger"></a>Logger
 
-#### `new Misstep.Logger([options])`
+#### <a name="api-logger-constructor"></a>`new Misstep.Logger([options])`
 
 ```js
 let logger = new Misstep.Logger(options);
@@ -339,7 +339,7 @@ let logger = new Misstep.Logger(options);
 * **no_warn (optional) {boolean}**: If true, suppresses the warning associated with skip_validate.
    Defaults to `false`.
 
-#### `builder.construct(options)`
+#### <a name="api-builder-construct"></a>`builder.construct(options)`
 
 *Hydrates the passed serialized error. `misstep.builder` redirects to this method.*
 
@@ -364,9 +364,9 @@ let logger = new Misstep.Logger(options);
    the Catcher is instantiated through `new Misstep(options)`, Misstep will automatically
    fill this with the Logger instance it creates.
 * **options.catchers (optional) {object}**: A hashmap of custom callbacks that can be later
-   used as catchers. For more information regarding these callbacks, see [`catcher.addCatcher(params)`](link).
+   used as catchers. For more information regarding these callbacks, see [`catcher.addCatcher(params)`](#api-catcher-addcatcher).
 
-#### `catcher.addCatcher(catchers)`
+#### <a name="api-catcher-addcatcher"></a>`catcher.addCatcher(catchers)`
 
 *Adds callbacks to the bank of callbacks that can be used as catchers. This method
  is not readily available from the Misstep object, but is called upon construction
@@ -416,7 +416,7 @@ handles the options. Is also accessible through `catcher.catcher({type: 'respons
 a value of `res` or `[res]`.
 
 
-#### `catcher.catcher(params)`
+#### <a name="api-catcher-catcher"></a>`catcher.catcher(params)`
 
 *Returns a catcher callback that receives an error object and handles it.*
 

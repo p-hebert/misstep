@@ -1,8 +1,8 @@
 {
   "name": "misstep",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Error Handling Library aiming at standardizing JS Error Handling Practices thoughtout your JS stack",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "repository": "https://github.com/p-hebert/misstep",
   "author": "p-hebert <philippe.hebert.qc@gmail.com>",
   "license": "MIT",

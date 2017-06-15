@@ -3,3 +3,10 @@ src
 
 #Tests folder
 test
+
+#Coverage folders
+.nyc_output
+coverage
+
+#Documentation
+docs
